@@ -4,38 +4,45 @@ import org.hibernate.SessionFactory;
 import org.muravev.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
+@Transactional(readOnly = true)
 public class UserDaoImpl implements UserDao {
 
-    @Autowired
-    public SessionFactory sessionFactory;
+    @PersistenceContext
+    EntityManager entityManager;
 
     @Override
     public List<User> getAllUsers() {
-        TypedQuery<User> query=sessionFactory.getCurrentSession().createQuery("from User");
-        return query.getResultList();
+        return entityManager.createQuery("from User", User.class).getResultList();
     }
     @Override
     public User showUserById(Long id) {
-        return sessionFactory.getCurrentSession().get(User.class, id);
+        return entityManager.find(User.class, id);
     }
 
     @Override
+    @Transactional
     public void addUser(User user) {
-        sessionFactory.getCurrentSession().save(user);
+        entityManager.persist(user);
     }
 
     @Override
+    @Transactional
     public void updateUser(User user) {
-        sessionFactory.getCurrentSession().update(user);
+        entityManager.merge(user);
     }
 
     @Override
+    @Transactional
     public void removeUser(Long id) {
-        User user = sessionFactory.getCurrentSession().get(User.class, id);
-        sessionFactory.getCurrentSession().delete(user);
+        User user = entityManager.find(User.class, id);
+        entityManager.remove(user);
     }
 }
