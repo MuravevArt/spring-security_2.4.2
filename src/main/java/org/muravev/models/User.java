@@ -1,6 +1,7 @@
 package org.muravev.models;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.util.Objects;
 
 @Entity
@@ -12,12 +13,17 @@ public class User {
     private Long id;
 
     @Column(name = "name")
+    @NotBlank(message = "Name should not be empty!")
     private String name;
 
     @Column(name = "surname")
+    @NotBlank(message = "Surname should not be empty!")
     private String surname;
 
     @Column(name = "age")
+    @NotNull(message = "Age should not be empty!")
+    @Min(value = 1, message = "Age cannot be less than 1!")
+    @Max(value = 127, message = "Age cannot be more than 127!")
     private Byte age;
 
     public User() {}
