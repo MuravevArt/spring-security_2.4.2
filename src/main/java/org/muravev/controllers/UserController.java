@@ -11,56 +11,61 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping("/users")
+@RequestMapping("/")
 public class UserController {
 
     @Autowired
     private UserService userService;
 
-    @GetMapping()
+    @RequestMapping(value = "login", method = RequestMethod.GET)
+    public String loginPage() {
+        return "login";
+    }
+
+    @GetMapping("/users")
     public String showAllUsers(Model model) {
         model.addAttribute("usersList", userService.getAllUsers());
         return "users";
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/users/{id}")
     public String showUserById(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("user", userService.showUserById(id));
+        model.addAttribute("user", userService.getById(id));
         return "show";
     }
 
-    @GetMapping("/new")
+    @GetMapping("/users/new")
     public String newUser(@ModelAttribute("user") User user) {
         return "new";
     }
 
-    @PostMapping()
+    @PostMapping("/users")
     public String createUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "new";
         }
-        userService.addUser(user);
+        userService.save(user);
         return "redirect:/users";
     }
 
-    @GetMapping("{id}/edit")
+    @GetMapping("/users/{id}/edit")
     public String editUser(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("user", userService.showUserById(id));
+        model.addAttribute("user", userService.getById(id));
         return "edit";
     }
 
-    @PatchMapping("{id}")
+    @PatchMapping("/users/{id}")
     public String updateUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "edit";
         }
-        userService.updateUser(user);
+        userService.save(user);
         return "redirect:/users";
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/users/{id}")
     public String deleteUser(@PathVariable("id") Long id) {
-        userService.removeUser(id);
+        userService.delete(id);
         return "redirect:/users";
     }
 }

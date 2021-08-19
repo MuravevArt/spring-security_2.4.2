@@ -8,11 +8,17 @@
 <h1>User Info: </h1>
 <table th:border="1">
     <tr>
+        <th>ID</th>
+        <th>E-MAIL</th>
+        <th>PASSWORD</th>
         <th>Name</th>
         <th>Surname</th>
         <th>Age</th>
     </tr>
     <tr>
+        <td th:text="${user.id}">Id</td>
+        <td th:text="${user.email}">Email</td>
+        <td th:text="${user.password}">Password</td>
         <td th:text="${user.name}">Name</td>
         <td th:text="${user.surname}">Surname</td>
         <td th:text="${user.age}">Age</td>

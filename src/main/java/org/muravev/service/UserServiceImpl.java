@@ -4,7 +4,6 @@ import org.muravev.dao.UserDao;
 import org.muravev.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,22 +19,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User showUserById(Long id) {
-        return userDao.showUserById(id);
+    public User getById(Long id) {
+        return userDao.getById(id);
     }
 
     @Override
-    public void addUser(User user) {
-        userDao.addUser(user);
+    public void save(User user) {
+        userDao.save(user);
     }
 
     @Override
-    public void updateUser(User user) {
-        userDao.updateUser(user);
-    }
-
-    @Override
-    public void removeUser(Long id) {
-        userDao.removeUser(id);
+    public void delete(Long id) {
+        userDao.delete(id);
     }
 }
