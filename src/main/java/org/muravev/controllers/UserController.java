@@ -1,14 +1,20 @@
 package org.muravev.controllers;
 
+import org.muravev.models.Role;
 import org.muravev.models.User;
+import org.muravev.service.RoleService;
 import org.muravev.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Controller
 @RequestMapping("/")
@@ -17,55 +23,76 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "login", method = RequestMethod.GET)
-    public String loginPage() {
-        return "login";
+    @Autowired
+    private RoleService roleService;
+
+    @GetMapping("/user")
+    public String getCurrentUserInfo(Model model) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        model.addAttribute("user", user);
+        return "show";
     }
 
-    @GetMapping("/users")
+    @GetMapping("/admin/users")
     public String showAllUsers(Model model) {
         model.addAttribute("usersList", userService.getAllUsers());
         return "users";
     }
 
-    @GetMapping("/users/{id}")
+    @GetMapping("/admin/users/{id}")
     public String showUserById(@PathVariable("id") Long id, Model model) {
         model.addAttribute("user", userService.getById(id));
         return "show";
     }
 
-    @GetMapping("/users/new")
-    public String newUser(@ModelAttribute("user") User user) {
+    @GetMapping("/admin/users/new")
+    public String newUser(@ModelAttribute("user") User user, Model model) {
+        model.addAttribute("allRoles", roleService.getAllRoles());
         return "new";
     }
 
-    @PostMapping("/users")
+    @PostMapping("/admin/users")
     public String createUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "new";
         }
+        Set<Role> roles = new HashSet<>();
+        List<String> roleUser;
+        roleUser = user.getRolesUser(user);
+        for (String nameRole : roleUser) {
+            roles.add(roleService.findByName(nameRole));
+        }
+        user.setRoles(roles);
         userService.save(user);
-        return "redirect:/users";
+        return "redirect:/admin/users";
     }
 
-    @GetMapping("/users/{id}/edit")
+    @GetMapping("/admin/users/{id}/edit")
     public String editUser(@PathVariable("id") Long id, Model model) {
+        model.addAttribute("allRoles", roleService.getAllRoles());
         model.addAttribute("user", userService.getById(id));
         return "edit";
     }
 
-    @PatchMapping("/users/{id}")
+    @PatchMapping("/admin/users/{id}")
     public String updateUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "edit";
         }
+        Set<Role> roles = new HashSet<>();
+        List<String> roleUser;
+        roleUser = user.getRolesUser(user);
+        for (String nameRole : roleUser) {
+            roles.add(roleService.findByName(nameRole));
+        }
+        user.setRoles(roles);
         userService.save(user);
-        return "redirect:/users";
+        return "redirect:/admin/users";
     }
 
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/admin/users/{id}")
     public String deleteUser(@PathVariable("id") Long id) {
         userService.delete(id);
-        return "redirect:/users";
+        return "redirect:/admin/users";
     }
 }

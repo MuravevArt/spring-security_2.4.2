@@ -32,4 +32,9 @@ public class UserServiceImpl implements UserService {
     public void delete(Long id) {
         userDao.delete(id);
     }
+
+    @Override
+    public User getByLogin(String email) {
+        return userDao.getByLogin(email);
+    }
 }

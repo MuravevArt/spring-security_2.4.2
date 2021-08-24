@@ -9,6 +9,8 @@ public interface UserDao {
 
     User getById(Long id);
 
+    User getByLogin(String email);
+
     void save(User user);
 
     void delete(Long id);
