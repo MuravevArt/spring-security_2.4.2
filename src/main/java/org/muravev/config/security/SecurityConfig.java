@@ -1,7 +1,5 @@
 package org.muravev.config.security;
 
-import org.muravev.service.UserDetailsServiceImpl;
-import org.muravev.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -5,8 +5,6 @@ import org.muravev.models.User;
 import org.muravev.service.RoleService;
 import org.muravev.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 
@@ -21,7 +19,6 @@ public class DataInitializer {
 
     @PostConstruct
     private void init() {
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         Role role1 = new Role("ADMIN");
         Role role2 = new Role("USER");
         roleService.saveRole(role1);
@@ -29,7 +26,7 @@ public class DataInitializer {
 
         User user = new User();
         user.setEmail("artem@mail.ru");
-        user.setPassword(passwordEncoder.encode("artem"));
+        user.setPassword("artem");
         user.setName("Artem");
         user.setSurname("Muravev");
         user.setAge((byte) 26);
@@ -37,7 +34,7 @@ public class DataInitializer {
 
         User user1 = new User();
         user1.setEmail("anna@mail.ru");
-        user1.setPassword(passwordEncoder.encode("anna"));
+        user1.setPassword("anna");
         user1.setName("Anna");
         user1.setSurname("Muraveva");
         user1.setAge((byte) 30);
@@ -45,7 +42,7 @@ public class DataInitializer {
 
         User user2 = new User();
         user2.setEmail("test@mail.ru");
-        user2.setPassword(passwordEncoder.encode("test"));
+        user2.setPassword("test");
         user2.setName("Test");
         user2.setSurname("Testovich");
         user2.setAge((byte) 3);

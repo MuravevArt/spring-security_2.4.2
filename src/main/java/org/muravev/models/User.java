@@ -59,16 +59,6 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
-    public List<String> getRolesUser(User user) {
-        List<String> rolesList = new ArrayList<>();
-        if (roles != null) {
-            for (Role role : user.getRoles()) {
-                rolesList.add(role.getName());
-            }
-        }
-        return rolesList;
-    }
-
     public Long getId() {
         return id;
     }
