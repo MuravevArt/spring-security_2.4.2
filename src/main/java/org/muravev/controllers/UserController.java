@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @Controller
-@RequestMapping("/")
 public class UserController {
 
     @Autowired
@@ -57,6 +56,7 @@ public class UserController {
                 user.addRole(roleService.findById(id));
             }
         }
+        user.addRole(roleService.findById(2L));
         userService.save(user);
         return "redirect:/admin/users";
     }
@@ -80,6 +80,7 @@ public class UserController {
                 user.addRole(roleService.findById(id));
             }
         }
+        user.addRole(roleService.findById(2L));
         userService.save(user);
         return "redirect:/admin/users";
     }
