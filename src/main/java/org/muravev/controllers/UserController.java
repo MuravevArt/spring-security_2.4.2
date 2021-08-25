@@ -1,6 +1,5 @@
 package org.muravev.controllers;
 
-import org.muravev.models.Role;
 import org.muravev.models.User;
 import org.muravev.service.RoleService;
 import org.muravev.service.UserService;
@@ -10,11 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
 import javax.validation.Valid;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Controller
 @RequestMapping("/")
@@ -52,17 +47,16 @@ public class UserController {
     }
 
     @PostMapping("/admin/users")
-    public String createUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
+    public String createUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult,
+                             @RequestParam(value = "index", required = false) Long[] index) {
         if (bindingResult.hasErrors()) {
             return "new";
         }
-        Set<Role> roles = new HashSet<>();
-        List<String> roleUser;
-        roleUser = user.getRolesUser(user);
-        for (String nameRole : roleUser) {
-            roles.add(roleService.findByName(nameRole));
+        if (index != null) {
+            for (Long id : index) {
+                user.addRole(roleService.findById(id));
+            }
         }
-        user.setRoles(roles);
         userService.save(user);
         return "redirect:/admin/users";
     }
@@ -75,17 +69,17 @@ public class UserController {
     }
 
     @PatchMapping("/admin/users/{id}")
-    public String updateUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
+    public String updateUser(@ModelAttribute("user") @Valid User user, BindingResult bindingResult,
+                             @RequestParam(value = "index", required = false) Long[] index) {
         if (bindingResult.hasErrors()) {
             return "edit";
         }
-        Set<Role> roles = new HashSet<>();
-        List<String> roleUser;
-        roleUser = user.getRolesUser(user);
-        for (String nameRole : roleUser) {
-            roles.add(roleService.findByName(nameRole));
+
+        if (index != null) {
+            for (Long id : index) {
+                user.addRole(roleService.findById(id));
+            }
         }
-        user.setRoles(roles);
         userService.save(user);
         return "redirect:/admin/users";
     }

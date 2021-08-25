@@ -2,14 +2,11 @@ package org.muravev.dao;
 
 import org.muravev.models.Role;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
-@Transactional(readOnly = true)
 public class RoleDaoImpl implements RoleDao {
 
     @PersistenceContext
@@ -21,12 +18,11 @@ public class RoleDaoImpl implements RoleDao {
     }
 
     @Override
-    public Role findByName(String name) {
-        return entityManager.createQuery("SELECT role FROM Role role where role.name=:name", Role.class)
-                .setParameter("name", name).getSingleResult();
+    public Role findById(Long id) {
+        return entityManager.createQuery("SELECT role FROM Role role where role.id=:id", Role.class)
+                .setParameter("id", id).getSingleResult();
     }
 
-    @Transactional
     @Override
     public void saveRole(Role role) {
         entityManager.persist(role);

@@ -2,14 +2,11 @@ package org.muravev.dao;
 
 import org.muravev.models.User;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @Repository
-@Transactional(readOnly = true)
 public class UserDaoImpl implements UserDao {
 
     @PersistenceContext
@@ -26,7 +23,6 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    @Transactional
     public void save(User user) {
         if (entityManager.contains(user)) {
             entityManager.persist(user);
@@ -36,7 +32,6 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    @Transactional
     public void delete(Long id) {
         User user = entityManager.find(User.class, id);
         entityManager.remove(user);

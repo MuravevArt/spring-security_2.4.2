@@ -1,17 +1,14 @@
 package org.muravev.config;
 
-
 import org.muravev.models.Role;
 import org.muravev.models.User;
 import org.muravev.service.RoleService;
 import org.muravev.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
 import javax.annotation.PostConstruct;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
 
 @Component
 public class DataInitializer {
@@ -24,20 +21,36 @@ public class DataInitializer {
 
     @PostConstruct
     private void init() {
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         Role role1 = new Role("ADMIN");
         Role role2 = new Role("USER");
         roleService.saveRole(role1);
         roleService.saveRole(role2);
-        Set<Role> roles = new HashSet<>();
-        roles.add(role1);
-        roles.add(role2);
 
-        User user = new User("artem@mail.ru", "artem", "Artem", "Muravev", (byte) 26,
-                Collections.singleton(roleService.findByName("ADMIN")));
-        User user1 = new User("anna@mail.ru", "anna", "Anna", "Muraveva", (byte) 30,
-                Collections.singleton(roleService.findByName("USER")));
-        User user2 = new User("test@mail.ru", "test", "Test", "Testovich", (byte) 3,
-                roles);
+        User user = new User();
+        user.setEmail("artem@mail.ru");
+        user.setPassword(passwordEncoder.encode("artem"));
+        user.setName("Artem");
+        user.setSurname("Muravev");
+        user.setAge((byte) 26);
+        user.addRole(role1);
+
+        User user1 = new User();
+        user1.setEmail("anna@mail.ru");
+        user1.setPassword(passwordEncoder.encode("anna"));
+        user1.setName("Anna");
+        user1.setSurname("Muraveva");
+        user1.setAge((byte) 30);
+        user1.addRole(role2);
+
+        User user2 = new User();
+        user2.setEmail("test@mail.ru");
+        user2.setPassword(passwordEncoder.encode("test"));
+        user2.setName("Test");
+        user2.setSurname("Testovich");
+        user2.setAge((byte) 3);
+        user2.addRole(role1);
+        user2.addRole(role2);
 
         userService.save(user);
         userService.save(user1);
