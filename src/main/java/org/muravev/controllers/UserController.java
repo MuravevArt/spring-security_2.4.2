@@ -35,7 +35,8 @@ public class UserController {
 
     @GetMapping("/admin/users/{id}")
     public String showUserById(@PathVariable("id") Long id, Model model) {
-        model.addAttribute("user", userService.getById(id));
+        User user = userService.getById(id);
+        model.addAttribute("user", user);
         return "show";
     }
 
@@ -55,8 +56,9 @@ public class UserController {
             for (Long id : index) {
                 user.addRole(roleService.findById(id));
             }
+        } else {
+            user.addRole(roleService.findById(2L));
         }
-        user.addRole(roleService.findById(2L));
         userService.save(user);
         return "redirect:/admin/users";
     }
@@ -79,8 +81,9 @@ public class UserController {
             for (Long id : index) {
                 user.addRole(roleService.findById(id));
             }
+        } else {
+            user.addRole(roleService.findById(2L));
         }
-        user.addRole(roleService.findById(2L));
         userService.save(user);
         return "redirect:/admin/users";
     }
